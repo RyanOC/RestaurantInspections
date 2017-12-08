@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RestaurantInspectionEntities.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Inspection">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RestaurantId" Type="int" Nullable="false" />
+          <Property Name="InspectionNumber" Type="int" Nullable="false" />
+          <Property Name="VisitNumber" Type="int" Nullable="false" />
+          <Property Name="InspectionType" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="InspectionDisposition" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="InspectionDate" Type="date" Nullable="false" />
+          <Property Name="CriticalViolationCountLegacy" Type="int" Nullable="false" />
+          <Property Name="NonCriticalViolationCountLegacy" Type="int" Nullable="false" />
+          <Property Name="TotalViolations" Type="int" Nullable="false" />
+          <Property Name="HighPriorityViolationCount" Type="int" Nullable="false" />
+          <Property Name="IntermediatePriorityViolationCount" Type="int" Nullable="false" />
+          <Property Name="BasicPriorityViolationCount" Type="int" Nullable="false" />
+          <Property Name="InspectionVisitId" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InspectionViolation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InspectionId" Type="int" Nullable="false" />
+          <Property Name="ViolationId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Restaurant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="District" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="CountyNumber" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="CountyName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LicenceNumber" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="BusinessName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="City" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Zip" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Lat" Type="decimal" Precision="19" Scale="5" />
+          <Property Name="Lon" Type="decimal" Precision="19" Scale="5" />
+        </EntityType>
+        <EntityType Name="Violation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Desc" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="SourceIndex" Type="int" Nullable="false" />
+          <Property Name="IsRiskFactor" Type="bit" Nullable="false" />
+          <Property Name="IsPrimaryConcern" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Inspection_RestaurantId_Restaurant_Id">
+          <End Role="Restaurant" Type="Self.Restaurant" Multiplicity="1" />
+          <End Role="Inspection" Type="Self.Inspection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Restaurant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Inspection">
+              <PropertyRef Name="RestaurantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InspectionViolation_InspectionId_Inspection_Id">
+          <End Role="Inspection" Type="Self.Inspection" Multiplicity="1" />
+          <End Role="InspectionViolation" Type="Self.InspectionViolation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Inspection">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InspectionViolation">
+              <PropertyRef Name="InspectionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InspectionViolation_ViolationId_Violation_Id">
+          <End Role="Violation" Type="Self.Violation" Multiplicity="1" />
+          <End Role="InspectionViolation" Type="Self.InspectionViolation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Violation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InspectionViolation">
+              <PropertyRef Name="ViolationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RestaurantInspectionEntitiesStoreContainer">
+          <EntitySet Name="Inspection" EntityType="Self.Inspection" Schema="ri" store:Type="Tables" />
+          <EntitySet Name="InspectionViolation" EntityType="Self.InspectionViolation" Schema="ri" store:Type="Tables" />
+          <EntitySet Name="Restaurant" EntityType="Self.Restaurant" Schema="ri" store:Type="Tables" />
+          <EntitySet Name="Violation" EntityType="Self.Violation" Schema="ri" store:Type="Tables" />
+          <AssociationSet Name="FK_Inspection_RestaurantId_Restaurant_Id" Association="Self.FK_Inspection_RestaurantId_Restaurant_Id">
+            <End Role="Restaurant" EntitySet="Restaurant" />
+            <End Role="Inspection" EntitySet="Inspection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InspectionViolation_InspectionId_Inspection_Id" Association="Self.FK_InspectionViolation_InspectionId_Inspection_Id">
+            <End Role="Inspection" EntitySet="Inspection" />
+            <End Role="InspectionViolation" EntitySet="InspectionViolation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InspectionViolation_ViolationId_Violation_Id" Association="Self.FK_InspectionViolation_ViolationId_Violation_Id">
+            <End Role="Violation" EntitySet="Violation" />
+            <End Role="InspectionViolation" EntitySet="InspectionViolation" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RestaurantInspectionEntities" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TestingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Inspection" EntityType="RestaurantInspectionEntities.Inspection" />
+          <EntitySet Name="InspectionViolation" EntityType="RestaurantInspectionEntities.InspectionViolation" />
+          <EntitySet Name="Restaurant" EntityType="RestaurantInspectionEntities.Restaurant" />
+          <EntitySet Name="Violation" EntityType="RestaurantInspectionEntities.Violation" />
+          <AssociationSet Name="FK_Inspection_RestaurantId_Restaurant_Id" Association="RestaurantInspectionEntities.FK_Inspection_RestaurantId_Restaurant_Id">
+            <End Role="Restaurant" EntitySet="Restaurant" />
+            <End Role="Inspection" EntitySet="Inspection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InspectionViolation_InspectionId_Inspection_Id" Association="RestaurantInspectionEntities.FK_InspectionViolation_InspectionId_Inspection_Id">
+            <End Role="Inspection" EntitySet="Inspection" />
+            <End Role="InspectionViolation" EntitySet="InspectionViolation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InspectionViolation_ViolationId_Violation_Id" Association="RestaurantInspectionEntities.FK_InspectionViolation_ViolationId_Violation_Id">
+            <End Role="Violation" EntitySet="Violation" />
+            <End Role="InspectionViolation" EntitySet="InspectionViolation" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Inspection">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RestaurantId" Type="Int32" Nullable="false" />
+          <Property Name="InspectionNumber" Type="Int32" Nullable="false" />
+          <Property Name="VisitNumber" Type="Int32" Nullable="false" />
+          <Property Name="InspectionType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="InspectionDisposition" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="InspectionDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CriticalViolationCountLegacy" Type="Int32" Nullable="false" />
+          <Property Name="NonCriticalViolationCountLegacy" Type="Int32" Nullable="false" />
+          <Property Name="TotalViolations" Type="Int32" Nullable="false" />
+          <Property Name="HighPriorityViolationCount" Type="Int32" Nullable="false" />
+          <Property Name="IntermediatePriorityViolationCount" Type="Int32" Nullable="false" />
+          <Property Name="BasicPriorityViolationCount" Type="Int32" Nullable="false" />
+          <Property Name="InspectionVisitId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Restaurant" Relationship="RestaurantInspectionEntities.FK_Inspection_RestaurantId_Restaurant_Id" FromRole="Inspection" ToRole="Restaurant" />
+          <NavigationProperty Name="InspectionViolation" Relationship="RestaurantInspectionEntities.FK_InspectionViolation_InspectionId_Inspection_Id" FromRole="Inspection" ToRole="InspectionViolation" />
+        </EntityType>
+        <EntityType Name="InspectionViolation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InspectionId" Type="Int32" Nullable="false" />
+          <Property Name="ViolationId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Inspection" Relationship="RestaurantInspectionEntities.FK_InspectionViolation_InspectionId_Inspection_Id" FromRole="InspectionViolation" ToRole="Inspection" />
+          <NavigationProperty Name="Violation" Relationship="RestaurantInspectionEntities.FK_InspectionViolation_ViolationId_Violation_Id" FromRole="InspectionViolation" ToRole="Violation" />
+        </EntityType>
+        <EntityType Name="Restaurant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="District" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="CountyNumber" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="CountyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LicenceNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Zip" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Lat" Type="Decimal" Precision="19" Scale="5" />
+          <Property Name="Lon" Type="Decimal" Precision="19" Scale="5" />
+          <NavigationProperty Name="Inspection" Relationship="RestaurantInspectionEntities.FK_Inspection_RestaurantId_Restaurant_Id" FromRole="Restaurant" ToRole="Inspection" />
+        </EntityType>
+        <EntityType Name="Violation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SourceIndex" Type="Int32" Nullable="false" />
+          <Property Name="IsRiskFactor" Type="Boolean" Nullable="false" />
+          <Property Name="IsPrimaryConcern" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="InspectionViolation" Relationship="RestaurantInspectionEntities.FK_InspectionViolation_ViolationId_Violation_Id" FromRole="Violation" ToRole="InspectionViolation" />
+        </EntityType>
+        <Association Name="FK_Inspection_RestaurantId_Restaurant_Id">
+          <End Type="RestaurantInspectionEntities.Restaurant" Role="Restaurant" Multiplicity="1" />
+          <End Type="RestaurantInspectionEntities.Inspection" Role="Inspection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Restaurant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Inspection">
+              <PropertyRef Name="RestaurantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InspectionViolation_InspectionId_Inspection_Id">
+          <End Type="RestaurantInspectionEntities.Inspection" Role="Inspection" Multiplicity="1" />
+          <End Type="RestaurantInspectionEntities.InspectionViolation" Role="InspectionViolation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Inspection">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InspectionViolation">
+              <PropertyRef Name="InspectionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InspectionViolation_ViolationId_Violation_Id">
+          <End Type="RestaurantInspectionEntities.Violation" Role="Violation" Multiplicity="1" />
+          <End Type="RestaurantInspectionEntities.InspectionViolation" Role="InspectionViolation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Violation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InspectionViolation">
+              <PropertyRef Name="ViolationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RestaurantInspectionEntitiesStoreContainer" CdmEntityContainer="TestingEntities">
+          <EntitySetMapping Name="Inspection">
+            <EntityTypeMapping TypeName="RestaurantInspectionEntities.Inspection">
+              <MappingFragment StoreEntitySet="Inspection">
+                <ScalarProperty Name="InspectionVisitId" ColumnName="InspectionVisitId" />
+                <ScalarProperty Name="BasicPriorityViolationCount" ColumnName="BasicPriorityViolationCount" />
+                <ScalarProperty Name="IntermediatePriorityViolationCount" ColumnName="IntermediatePriorityViolationCount" />
+                <ScalarProperty Name="HighPriorityViolationCount" ColumnName="HighPriorityViolationCount" />
+                <ScalarProperty Name="TotalViolations" ColumnName="TotalViolations" />
+                <ScalarProperty Name="NonCriticalViolationCountLegacy" ColumnName="NonCriticalViolationCountLegacy" />
+                <ScalarProperty Name="CriticalViolationCountLegacy" ColumnName="CriticalViolationCountLegacy" />
+                <ScalarProperty Name="InspectionDate" ColumnName="InspectionDate" />
+                <ScalarProperty Name="InspectionDisposition" ColumnName="InspectionDisposition" />
+                <ScalarProperty Name="InspectionType" ColumnName="InspectionType" />
+                <ScalarProperty Name="VisitNumber" ColumnName="VisitNumber" />
+                <ScalarProperty Name="InspectionNumber" ColumnName="InspectionNumber" />
+                <ScalarProperty Name="RestaurantId" ColumnName="RestaurantId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InspectionViolation">
+            <EntityTypeMapping TypeName="RestaurantInspectionEntities.InspectionViolation">
+              <MappingFragment StoreEntitySet="InspectionViolation">
+                <ScalarProperty Name="ViolationId" ColumnName="ViolationId" />
+                <ScalarProperty Name="InspectionId" ColumnName="InspectionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Restaurant">
+            <EntityTypeMapping TypeName="RestaurantInspectionEntities.Restaurant">
+              <MappingFragment StoreEntitySet="Restaurant">
+                <ScalarProperty Name="Lon" ColumnName="Lon" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="Zip" ColumnName="Zip" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="BusinessName" ColumnName="BusinessName" />
+                <ScalarProperty Name="LicenceNumber" ColumnName="LicenceNumber" />
+                <ScalarProperty Name="CountyName" ColumnName="CountyName" />
+                <ScalarProperty Name="CountyNumber" ColumnName="CountyNumber" />
+                <ScalarProperty Name="District" ColumnName="District" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Violation">
+            <EntityTypeMapping TypeName="RestaurantInspectionEntities.Violation">
+              <MappingFragment StoreEntitySet="Violation">
+                <ScalarProperty Name="IsPrimaryConcern" ColumnName="IsPrimaryConcern" />
+                <ScalarProperty Name="IsRiskFactor" ColumnName="IsRiskFactor" />
+                <ScalarProperty Name="SourceIndex" ColumnName="SourceIndex" />
+                <ScalarProperty Name="Desc" ColumnName="Desc" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
